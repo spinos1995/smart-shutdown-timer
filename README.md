@@ -2,7 +2,7 @@
 
 A lightweight Python GUI tool that monitors **Shotcut exports**, **Firefox downloads**, or a **basic countdown** – and shuts down your PC when the task finishes.
 
-![Demo](githubprevieew.gif)
+![Demo](previeew.gif)
 
 ---
 
