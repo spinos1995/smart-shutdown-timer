@@ -1,10 +1,8 @@
 # 🖥️ Smart Shutdown Timer
 
-A lightweight Python GUI tool that monitors **Shotcut exports**, **Firefox downloads**, or a **custom countdown** – and shuts down your PC when the task finishes.
+A lightweight Python GUI tool that monitors **Shotcut exports**, **Firefox downloads**, or a **basic countdown** – and shuts down your PC when the task finishes.
 
-![Screenshot](shotcut.png)
-![Screenshot](basic.png)
-![Screenshot](downloads.png)
+![Demo](githubprevieew.gif)
 
 ---
 
@@ -15,7 +13,8 @@ A lightweight Python GUI tool that monitors **Shotcut exports**, **Firefox downl
 | **🎬 Shotcut** | Detects `melt` processes (Shotcut's render engine). Shows progress & ETA. Shuts down after export finishes. |
 | **⏰ Basic** | Simple countdown timer – set hours and minutes. |
 | **🦊 Firefox** | Watches for `.part` download files. Skips stalled downloads. Shuts down after all downloads complete. |
-| **Global Cancel** | Stops any running timer immediately – no matter which tab. |
+| **Global Cancel** | Stops any running process immediately – no matter which tab. |
+
 
 ---
 
