@@ -13,7 +13,7 @@ A lightweight Python GUI tool that monitors **Shotcut exports**, **Firefox downl
 | **🎬 Shotcut** | Detects `melt` processes (Shotcut's render engine). Shows progress & ETA. Shuts down after export finishes. |
 | **⏰ Basic** | Simple countdown timer – set hours and minutes. |
 | **🦊 Firefox** | Watches for `.part` download files. Skips stalled downloads. Shuts down after all downloads complete. |
-| **🔊 Audio** | Watches for audio playing. Shuts down after audio stops. Proper before sleep movies,music etc. |
+| **🔊 Audio** | Monitors audio playing. Shuts down after audio stops. Proper before sleep movies,music etc. |
 | **Global Cancel** | Stops any running process immediately – no matter which tab. |
 
 ---
