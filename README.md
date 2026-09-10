@@ -12,8 +12,8 @@ A lightweight Python GUI tool that monitors **Shotcut exports**, **Firefox downl
 |-----|--------------|
 | **⏰ Basic** | Simple countdown timer – set hours and minutes. |
 | **🦊 Firefox** | Watches for `.part` download files. Skips stalled downloads. Shuts down after all downloads complete. |
-| **🎬 Shotcut** | Detects `melt` processes (Shotcut's render engine). Shows progress. Handles queued exports. Shuts down after all exports(1 or more). |
-| **🔊 Audio** | Monitors audio playing. Shuts down after audio stops. Proper before sleep movies,music etc. |
+| **🎬 Shotcut** | Detects `melt` processes (Shotcut's render engine). Shows progress. Handles queued exports. Shuts down after all exports (1 or more). |
+| **🔊 Audio** | Monitors audio playing. Shuts down after audio stops. Perfect before sleep, movies, music, etc. |
 | **Cancel Process** | Stops any running process immediately – no matter which tab. |
 
 ---
@@ -37,16 +37,25 @@ A lightweight Python GUI tool that monitors **Shotcut exports**, **Firefox downl
 | **Shotcut** | 26.8.1 and later – any version using `melt -progress2` |
 | **Firefox** | Any modern version (tested with v130+) |
 
-> ⚠️ **Windows / macOS:** This script is designed for Linux only. It has not been tested on other operating systems. The shutdown command (`shutdown -h now`) and process detection may not work on non-Linux platforms.
+> ⚠️ **Windows / macOS:** This script is designed for Linux only. It has not been tested on other operating systems. The shutdown command (`systemctl poweroff`) and process detection may not work on non-Linux platforms.
 
 ---
 
 ## 🚀 Installation
 
-### 1. Install dependencies
-
 ```bash
+# 1. System dependencies
 sudo apt update
 sudo apt install python3-pip python3-tk
+
+# 2. Install psutil (pick ONE)
+#    Option A — venv (recommended, safe)
+python3 -m venv ~/myenv
+source ~/myenv/bin/activate
+pip install psutil
+
+#    Option B — global (quick, but bypasses safety)
 pip install --break-system-packages psutil
-```
+
+# 3. Run
+python3 SmartShutdownTimer.py
