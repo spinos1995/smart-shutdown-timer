@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """
-Smart shutdown timer - v4.9
+Smart shutdown timer - v5.0
 Tabs: Basic | Firefox | Shotcut | Audio
 Audio detection skips speech-dispatcher-dummy and other system streams.
 Shutdown uses systemctl poweroff – no password/keyring prompt.
+Changes in v5.0:
+  - Portable default path (no hardcoded username)
+  - Tighter Shotcut process matching: melt-7 / /melt / melt
 """
 
 import tkinter as tk
@@ -485,25 +488,50 @@ class SmartShutdownTimer:
 
     # ---- Shotcut timer ----
     def get_shotcut_jobs(self):
+        """
+        Match Shotcut's export engine ('melt') regardless of install method:
+          - melt-7      → AppImage / Flatpak (as seen in the process list)
+          - melt        → Snap / native .deb / distro repo
+          - path /melt  → Flatpak sandbox (/app/bin/melt-7)
+        Requires the -progress2 flag to avoid matching unrelated processes.
+        """
         jobs = []
         try:
             if HAS_PSUTIL:
                 for proc in psutil.process_iter(['pid','name','cmdline']):
                     try:
                         info = proc.info
-                        cmd = " ".join(info['cmdline'] or [])
-                        if "-progress2" in cmd and "melt" in cmd.lower():
-                            m = re.search(r'avformat:([^\s]+)', cmd)
-                            if m:
-                                file_path = m.group(1).strip('"').strip("'")
-                            else:
-                                file_path = "export"
-                                for p in info['cmdline']:
-                                    if p.endswith(('.mp4','.mov','.mkv','.avi','.webm','.m4v')):
-                                        file_path = p
-                                        break
-                            basename = os.path.basename(file_path) if file_path != "export" else "export"
-                            jobs.append({"pid": info['pid'], "file": file_path, "basename": basename})
+                        cmdline = info['cmdline'] or []
+                        if not cmdline:
+                            continue
+
+                        # Require -progress2 (Shotcut's export flag)
+                        if "-progress2" not in cmdline and "-progress2" not in " ".join(cmdline):
+                            continue
+
+                        # Check first argument (the binary)
+                        binary = cmdline[0]
+                        binary_base = os.path.basename(binary)
+                        matched = (
+                            binary_base == "melt-7" or
+                            binary_base == "melt" or
+                            "/melt" in binary
+                        )
+                        if not matched:
+                            continue
+
+                        cmd_str = " ".join(cmdline)
+                        m = re.search(r'avformat:([^\s]+)', cmd_str)
+                        if m:
+                            file_path = m.group(1).strip('"').strip("'")
+                        else:
+                            file_path = "export"
+                            for p in cmdline:
+                                if p.endswith(('.mp4','.mov','.mkv','.avi','.webm','.m4v')):
+                                    file_path = p
+                                    break
+                        basename = os.path.basename(file_path) if file_path != "export" else "export"
+                        jobs.append({"pid": info['pid'], "file": file_path, "basename": basename})
                     except:
                         continue
         except:
