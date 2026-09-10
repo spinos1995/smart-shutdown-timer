@@ -35,7 +35,8 @@ class SmartShutdownTimer:
         self.root.minsize(680, 450)
         self.root.configure(bg="#f0f0f0")
 
-        self.watch_dir = tk.StringVar(value="/home/spyros/Desktop")
+        # ---- Portable default: expands to the current user's Desktop ----
+        self.watch_dir = tk.StringVar(value=os.path.expanduser("~/Desktop"))
         self.after_delay_sec = tk.IntVar(value=5)
         self.basic_hour = tk.IntVar(value=0)
         self.basic_min = tk.IntVar(value=30)
@@ -116,7 +117,7 @@ class SmartShutdownTimer:
         # Global status box
         status_box = tk.Frame(main, bg="white", relief="solid", bd=1, padx=12, pady=12)
         status_box.pack(fill="x", pady=(0,10))
-        self.status_var = tk.StringVar(value="Idle")   # no dot
+        self.status_var = tk.StringVar(value="Idle")
         self.status_label = tk.Label(status_box, textvariable=self.status_var,
                                      font=("Sans", 12, "bold"), bg="white", anchor="center")
         self.status_label.pack(fill="x", pady=2)
@@ -240,7 +241,6 @@ class SmartShutdownTimer:
             return
         self.last_status_update = now
         def _u():
-            # Remove any dot prefix
             status_clean = status.lstrip('● ').strip()
             if not detail:
                 self.status_label.config(font=("Sans", 14, "bold"), justify="center")
@@ -920,10 +920,8 @@ class SmartShutdownTimer:
     # ---- SHUTDOWN WITHOUT PASSWORD ----
     def do_shutdown(self, reason):
         try:
-            # Use systemctl poweroff – no password prompt (polkit handles it)
             subprocess.Popen(["systemctl", "poweroff"])
         except Exception as e:
-            # Fallback to sudo if systemctl fails
             try:
                 subprocess.Popen(["sudo", "shutdown", "-h", "now", reason])
             except Exception as e2:
